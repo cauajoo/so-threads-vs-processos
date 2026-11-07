@@ -9,8 +9,8 @@ Calcula a média geral de votos e o partido e o cargo com maior participação (
 mini dashboard no terminal.
 
 ## Como executar
-1. Baixe `votacao_candidato_munzona_2026.zip` no [portal de dados abertos do TSE](https://dadosabertos.tse.jus.br/)
-   e extraia os arquivos `_BR.csv` (presidente) e `_SP.csv` para esta pasta. Eles não estão no repositório por causa do tamanho.
+1. Descompacte os dois zips da pasta `dados/` (dados de votação do [TSE](https://dadosabertos.tse.jus.br/):
+   `_BR` com presidente e `_SP` com os demais cargos) e coloque os `.csv` ao lado do `main.py`.
 2. Rode:
 ```bash
 python main.py
