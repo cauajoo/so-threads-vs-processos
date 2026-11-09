@@ -1,9 +1,9 @@
-"""Versão Processos: memória isolada; filhos devolvem o resultado por Queue."""
 import multiprocessing as mp
 
 from comum import blocos, fundir, novo_acc, processar_bloco
 
 
+# Processa blocos da fila em um processo
 def worker_proc(fila, resultados, idx):
     local = novo_acc()
     while (b := fila.get()) is not None:
@@ -11,6 +11,7 @@ def worker_proc(fila, resultados, idx):
     resultados.put(local)
 
 
+# Roda a versão com multiprocessing
 def rodar_processos(caminho, n):
     idx, gen = blocos(caminho)
     fila, resultados = mp.Queue(maxsize=n * 2), mp.Queue()
@@ -22,7 +23,7 @@ def rodar_processos(caminho, n):
     for _ in ps:
         fila.put(None)
     acc = novo_acc()
-    for _ in ps:  # get() ANTES do join(), senão há deadlock com resultados grandes
+    for _ in ps:
         fundir(acc, resultados.get())
     for p in ps:
         p.join()

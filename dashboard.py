@@ -1,6 +1,4 @@
-"""Mini dashboard em texto: tempos e rankings de média de votos."""
-
-
+# Desenha um gráfico de barras no terminal
 def _barras(titulo, itens, fmt, largura=40):
     print(f"\n{titulo}")
     mx = max(v for _, v in itens) or 1
@@ -8,8 +6,8 @@ def _barras(titulo, itens, fmt, largura=40):
         print(f"  {nome[:22]:<22} {'█' * max(1, round(v / mx * largura)):<{largura}} {fmt(v)}")
 
 
+# Mostra o dashboard com tempos e rankings
 def mostrar(acc, tempos):
-    """`acc`: acumulador final; `tempos`: {"Threads": s, "Processos": s}."""
     soma, cont = acc["geral"]
     print("\n" + "=" * 70 + "\n  DASHBOARD - VOTOS TSE\n" + "=" * 70)
     print(f"  Registros válidos: {cont}   Média geral: {soma / cont:.4f}")

@@ -1,20 +1,19 @@
-"""Funções compartilhadas: leitura em blocos, limpeza (Map) e fusão (Reduce)."""
 import csv
 from itertools import islice
 
-CHUNK = 50_000  # linhas por bloco
+CHUNK = 50_000
 INVALIDOS = {"#NULO", "-1", "#NE", "-3"}
 COLUNAS = ("QT_VOTOS_NOMINAIS_VALIDOS", "SG_PARTIDO", "DS_CARGO", "NM_MUNICIPIO")
-MUNICIPIO = "SÃO PAULO"  # apenas a capital
+MUNICIPIO = "SÃO PAULO"
 
 
+# Cria o acumulador vazio de somas e contagens
 def novo_acc():
-    """Acumulador: [soma, contagem] geral, e dicts partido/cargo -> [soma, contagem]."""
     return {"geral": [0, 0], "partido": {}, "cargo": {}}
 
 
+# Filtra e soma os votos válidos de um bloco
 def processar_bloco(linhas, idx, acc):
-    """Map: limpa as linhas do bloco e atualiza o acumulador `acc`."""
     iv, ip, ic, im = idx
     for l in linhas:
         try:
@@ -37,8 +36,8 @@ def processar_bloco(linhas, idx, acc):
             s[1] += 1
 
 
+# Junta um acumulador em outro
 def fundir(destino, origem):
-    """Reduce: soma o acumulador `origem` em `destino`."""
     destino["geral"][0] += origem["geral"][0]
     destino["geral"][1] += origem["geral"][1]
     for chave in ("partido", "cargo"):
@@ -48,11 +47,8 @@ def fundir(destino, origem):
             d[1] += n
 
 
+# Lê os CSVs em blocos de linhas
 def blocos(caminhos):
-    """Retorna (índices das colunas, gerador de blocos) lendo os CSVs aos pedaços.
-
-    shortcut: usa os índices do 1º arquivo para todos; vale p/ os CSVs munzona do TSE (mesmo layout).
-    """
     with open(caminhos[0], encoding="latin-1", newline="") as f:
         cab = next(csv.reader(f, delimiter=";"))
     faltam = [c for c in COLUNAS if c not in cab]
@@ -60,6 +56,7 @@ def blocos(caminhos):
         raise SystemExit(f"CSV sem as colunas {faltam}. Use o arquivo 'votacao_candidato_munzona'.")
     idx = tuple(cab.index(c) for c in COLUNAS)
 
+    # Gera os blocos de todos os arquivos
     def gen():
         for caminho in caminhos:
             with open(caminho, encoding="latin-1", newline="") as f:

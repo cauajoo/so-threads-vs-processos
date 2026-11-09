@@ -1,8 +1,3 @@
-"""Média de votos do TSE: Multithreading vs Multiprocessing (Map-Reduce).
-
-Uso:  python main.py [caminho_do_csv] [n_workers]
-Sem argumentos usa todos os votacao_candidato_munzona*.csv da pasta deste arquivo.
-"""
 import glob
 import os
 import sys
@@ -16,12 +11,13 @@ PASTA = os.path.dirname(os.path.abspath(__file__))
 ARQUIVOS = sorted(glob.glob(os.path.join(PASTA, "votacao_candidato_munzona*.csv")))
 
 
+# Retorna o grupo com maior % dos votos
 def melhor(d, total):
-    """Grupo com maior participação (%) no total de votos."""
     k = max(d, key=lambda k: d[k][0])
     return k, d[k][0] / total * 100
 
 
+# Executa uma versão e mede o tempo
 def medir(nome, fn, caminho, n):
     t0 = time.perf_counter()
     acc = fn(caminho, n)
